@@ -47,14 +47,35 @@ class Login(MDScreen):
     user_name = ObjectProperty(None)
     user_email = ObjectProperty(None)
     user_password = ObjectProperty(None)
-    error_label = ObjectProperty(None)
 
     def login(self):
+        # Senha vazia, errada, menos de 6 caracteres
         x = db.login_db(self.user_email.text, self.user_password.text)
-        if x == 'erro_nf':
+        if x == '':
             self.user_email.text = ''
             self.user_password.text = ''
-            self.error_label.text = 'Email not found'
+            self.user_email.helper_text = 'Email'
+            self.user_email.error = True
+        elif x == 'email_nf':
+            self.user_email.text = ''
+            self.user_password.text = ''
+            self.user_email.helper_text = 'Email Not found'
+            self.user_email.error = True
+        elif x == 'inv_email':
+            self.user_email.text = ''
+            self.user_password.text = ''
+            self.user_email.helper_text = 'Invalid Email'
+            self.user_email.error = True
+        elif x == 'mss_pssw':
+            self.user_password.text = ''
+            self.user_password.helper_text = 'Password'
+            self.user_password.error = True
+        elif x == 'inv_pssw':
+            self.user_password.text = ''
+            self.user_password.helper_text = 'Incorrect Password'
+            self.user_password.error = True
+        elif x == None:
+            print('Senha vazia')
         else:
             self.parent.current = 'product_screen'
             self.parent.ids.usr.user_name.text = x[0]

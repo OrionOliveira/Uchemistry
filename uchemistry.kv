@@ -196,7 +196,6 @@
     user_name: user_name
     user_email: user_email
     user_password: user_password
-    error_label: error_label
 
     FloatLayout:
         MDTopAppBar:
@@ -213,18 +212,24 @@
         MDTextField:
             id: user_email
             hint_text: 'Enter your email:'
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
             icon_right: 'email'
             icon_right_color: app.theme_cls.primary_color
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             size_hint_x: None
             width: 250
         MDTextField:
             id: user_password
             hint_text: 'Enter your password:'
-            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
             password: True
             icon_right: 'lock'
             icon_right_color: app.theme_cls.primary_color
+            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
             size_hint_x: None
             width: 250
         MDRaisedButton:
@@ -238,17 +243,9 @@
             font_size: 14
             pos_hint: {'center_x': 0.5, 'center_y': 0.22}
             on_press: app.root.current = 'signin_screen'
-        MDLabel:
-            id: error_label
-            text: ''
-            font_size: 14
-            halign: 'center'
-            pos_hint: {'center_x': 0.5, 'center_y': 0.12}
-            theme_text_color: 'Error'
         Label:
             id: user_name
             text: ''
-        
 
 <User>:
     user_title: user_bar

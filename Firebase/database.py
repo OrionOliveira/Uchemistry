@@ -36,26 +36,36 @@ def sign_in_db(name, email, password):
 
 # Função de Login
 def login_db(email, senha):
-  try:
-    auth_token = auth.sign_in_with_email_and_password(email, senha)
-    token_id = auth_token['idToken']
-    # Retorna ID do usuário
-    UserID = auth.get_account_info(token_id)['users'][0]['localId']
+  if email == '':
+    return ''
+  else:
+    try:
+      auth_token = auth.sign_in_with_email_and_password(email, senha)
+      token_id = auth_token['idToken']
+      # Retorna ID do usuário
+      UserID = auth.get_account_info(token_id)['users'][0]['localId']
 
-    # Retorna nome de usuário
-    users = db.child('Users').child('UIDs').get()
-    converted_to_dict = dict(users.val())
-    user_name = converted_to_dict[UserID]['name']
-    token_id = auth.refresh(auth_token['refreshToken'])
-    return user_name, UserID
-
-  except requests.HTTPError as e:
-    print(e)
-    error_json = e.args[1]
-    error = json.loads(error_json)['error']['message']
-    if error == 'EMAIL_NOT_FOUND':
-      print('Email não existe')
-    return 'email_nf'
+      # Retorna nome de usuário
+      users = db.child('Users').child('UIDs').get()
+      converted_to_dict = dict(users.val())
+      user_name = converted_to_dict[UserID]['name']
+      token_id = auth.refresh(auth_token['refreshToken'])
+      return user_name, UserID
+      
+    # Tratamento de erros
+    except requests.HTTPError as e:
+      error_json = e.args[1]
+      error = json.loads(error_json)['error']['message']
+      if error == 'EMAIL_NOT_FOUND':
+        return 'email_nf'
+      elif error == 'INVALID_EMAIL':
+        return 'inv_email'
+      elif error == 'MISSING_PASSWORD':
+        return 'mss_pssw'
+      elif error == 'INVALID_PASSWORD':
+        return 'inv_pssw'
+      else:
+        print(error)
 
 def save_product(product_name, product_content, user_id, product_amount):
   data = {
