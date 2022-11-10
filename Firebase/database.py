@@ -20,19 +20,59 @@ auth = firebase.auth()
 db = firebase.database()
 
 # Função de cadastro
-def sign_in_db(name, email, password):
-  auth_token = auth.create_user_with_email_and_password(email, password)
-  token_id = auth_token['idToken']
+def sign_in_db(name, email, password, rpt_pssw):
 
-  UserID = auth.get_account_info(token_id)['users'][0]['localId']
-  
-  data = {
-    'email': email,
-    'name': name
-  }
-  db.child('Users').child('UIDs').child(UserID).set(data)
+# Tratamentos de erros
+  p = ['gmail', 'outlook', 'hotmail', 'yahoo']
 
-  return UserID
+  # Campo nome vazio
+  if name == '':
+    return 'nm_emp'
+  # Campo email vazio
+  elif email == '':
+    return 'email_emp'
+  # Campo senha vazio
+  elif password == '':
+    return 'pssw_emp'
+  # Campo repita a senha vazio
+  elif rpt_pssw == '':
+    return ''
+  # Senhas não conferem
+  elif password != rpt_pssw:
+    return 'pssw_nc'
+  # Senha tem menos de 6 caracteres
+  elif len(password) < 6:
+    return 'wk_pssw'
+
+  # Tratar o erro de provedor de e-mail (senão o usuário poderá digitar "gmaail", por exemplo)
+  #elif p[0] not in email or p[1] not in email or p[2] not in email or p[3] not in email:
+  #  return 'inv_email'
+
+  # Caso não haja nenhum erro na digitação das informações, tenta cadastrar
+  else:
+    try:
+      auth_token = auth.create_user_with_email_and_password(email, password)
+      token_id = auth_token['idToken']
+
+      UserID = auth.get_account_info(token_id)['users'][0]['localId']
+      
+      data = {
+        'email': email,
+        'name': name
+      }
+      db.child('Users').child('UIDs').child(UserID).set(data)
+      return UserID
+    # Se houver erro no cadastro:
+    except requests.HTTPError as e:
+        error_json = e.args[1]
+        error = json.loads(error_json)['error']['message']
+        print(error)
+        if error == 'INVALID_EMAIL':
+          return 'inv_email'
+        elif error == 'EMAIL_EXISTS':
+          return 'email_exst'
+        elif error == 'WEAK_PASSWORD':
+          return 'wk_pssw'
 
 # Função de Login
 def login_db(email, senha):

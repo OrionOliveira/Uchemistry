@@ -31,11 +31,37 @@ class SignIn(MDScreen):
     user_name = ObjectProperty(None)
     user_email = ObjectProperty(None)
     user_password = ObjectProperty(None)
+    repeated_password = ObjectProperty(None)
 
     def sign_in(self):
-        x = db.sign_in_db(self.user_name.text, self.user_email.text, self.user_password.text)
-        if x == 'erro':
-            print("Sign In failed")
+        # Cadastra o usuário no Firebase
+        x = db.sign_in_db(self.user_name.text, self.user_email.text, self.user_password.text, self.repeated_password.text)
+        print(f'X = {x}')
+
+        # Tratamento de erros
+        if x == '':
+            pass
+        elif x == 'inv_email':
+            self.user_email.helper_text = 'Invalid Email'
+            self.user_email.error = True
+        elif x == 'email_exst':
+            self.user_email.helper_text = 'Email Exists'
+            self.user_email.error = True
+        elif x == 'pssw_nc':
+            self.repeated_password.helper_text = 'The password does not match'
+            self.repeated_password.error = True
+        elif x == 'wk_pssw':
+            self.user_password.helper_text = 'Password should be at least 6 characters'
+            self.user_password.error = True
+        elif x == 'pssw_emp':
+            self.user_password.helper_text = 'Password'
+            self.user_password.error = True
+        elif x == 'nm_emp':
+            self.user_name.helper_text = 'Name'
+            self.user_name.error = True
+        elif x == 'email_emp':
+            self.user_email.helper_text = 'Email'
+            self.user_email.error = True
         else:
             self.parent.current = 'product_screen'
             self.parent.ids.usr.user_name.text = str(self.user_name.text)
@@ -49,29 +75,23 @@ class Login(MDScreen):
     user_password = ObjectProperty(None)
 
     def login(self):
-        # Senha vazia, errada, menos de 6 caracteres
         x = db.login_db(self.user_email.text, self.user_password.text)
         if x == '':
-            self.user_email.text = ''
             self.user_password.text = ''
             self.user_email.helper_text = 'Email'
             self.user_email.error = True
         elif x == 'email_nf':
-            self.user_email.text = ''
             self.user_password.text = ''
             self.user_email.helper_text = 'Email Not found'
             self.user_email.error = True
         elif x == 'inv_email':
-            self.user_email.text = ''
             self.user_password.text = ''
             self.user_email.helper_text = 'Invalid Email'
             self.user_email.error = True
         elif x == 'mss_pssw':
-            self.user_password.text = ''
             self.user_password.helper_text = 'Password'
             self.user_password.error = True
         elif x == 'inv_pssw':
-            self.user_password.text = ''
             self.user_password.helper_text = 'Incorrect Password'
             self.user_password.error = True
         elif x == None:
@@ -116,7 +136,7 @@ class UChemistry(MDApp):
         self.theme_cls.primary_palette = 'Purple'
         return Manager()
 
-    def go_home(self, screen):
+    def go_home(self):
         self.root.current = 'menu_screen'
 
 if __name__=='__main__':
