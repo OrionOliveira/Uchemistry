@@ -34,6 +34,20 @@ class SignIn(MDScreen):
     repeated_password = ObjectProperty(None)
 
     def sign_in(self):
+        def show_error(local, error):
+            if local == 'email':
+                self.user_email.helper_text = error
+                self.user_email.error = True
+            elif local == 'pssw':
+                self.user_password.helper_text = error
+                self.user_password.error = True
+            elif local == 'rpt_pssw':
+                self.repeated_password.helper_text = error
+                self.repeated_password.error = True
+            else:
+                self.user_name.helper_text = error
+                self.user_name.error = True
+
         # Cadastra o usuário no Firebase
         x = db.sign_in_db(self.user_name.text, self.user_email.text, self.user_password.text, self.repeated_password.text)
         print(f'X = {x}')
@@ -42,35 +56,28 @@ class SignIn(MDScreen):
         if x == '':
             pass
         elif x == 'inv_email':
-            self.user_email.helper_text = 'Invalid Email'
-            self.user_email.error = True
+            show_error('email', 'Invalid Email')
         elif x == 'email_exst':
-            self.user_email.helper_text = 'Email Exists'
-            self.user_email.error = True
+            show_error('email', 'Email Exists')
         elif x == 'pssw_nc':
-            self.repeated_password.helper_text = 'The password does not match'
-            self.repeated_password.error = True
+            show_error('rpt_pssw', 'The password does not match')
         elif x == 'wk_pssw':
-            self.user_password.helper_text = 'Password should be at least 6 characters'
-            self.user_password.error = True
+            show_error('pssw', 'Password should be at least 6 characters')
         elif x == 'pssw_emp':
-            self.user_password.helper_text = 'Password'
-            self.user_password.error = True
+            show_error('pssw', 'Password')
+        elif x == 'rpt_pssw_emp':
+            show_error('rpt_pssw', 'Repeat password')
         elif x == 'nm_emp':
-            self.user_name.helper_text = 'Name'
-            self.user_name.error = True
+            show_error('name', 'Name')
         elif x == 'email_emp':
-            self.user_email.helper_text = 'Email'
-            self.user_email.error = True
+            show_error('email','Email')
         elif x == 'inv_prv':
-            self.user_email.helper_text = 'Invalid email provider (@xxx)'
-            self.user_email.error = True
+            show_error('email','Invalid email provider (@xxx)')
         else:
             self.parent.current = 'product_screen'
             self.parent.ids.usr.user_name.text = str(self.user_name.text)
             self.parent.ids.usr.user_title.title = f"Uchemistry - {str(self.user_name.text)}"
             self.parent.ids.usr.user_id.text = x
-            print('Sing In sucessfuly!!')
 
 class Login(MDScreen):
     user_name = ObjectProperty(None)
@@ -78,25 +85,25 @@ class Login(MDScreen):
     user_password = ObjectProperty(None)
 
     def login(self):
+        def show_error(local, error):
+            if local == 'email':
+                self.user_email.helper_text = error
+                self.user_email.error = True
+            else:
+                self.user_password.helper_text = error
+                self.user_password.error = True
+
         x = db.login_db(self.user_email.text, self.user_password.text)
-        if x == '':
-            self.user_password.text = ''
-            self.user_email.helper_text = 'Email'
-            self.user_email.error = True
+        if x == 'email_emp':
+            show_error('email', 'Email')
         elif x == 'email_nf':
-            self.user_password.text = ''
-            self.user_email.helper_text = 'Email Not found'
-            self.user_email.error = True
+            show_error('email','Email Not found')
         elif x == 'inv_email':
-            self.user_password.text = ''
-            self.user_email.helper_text = 'Invalid Email'
-            self.user_email.error = True
+            show_error('email','Invalid Email')
         elif x == 'mss_pssw':
-            self.user_password.helper_text = 'Password'
-            self.user_password.error = True
+            show_error('password','Password')
         elif x == 'inv_pssw':
-            self.user_password.helper_text = 'Incorrect Password'
-            self.user_password.error = True
+            show_error('password','Incorrect Password')
         elif x == None:
             print('Senha vazia')
         else:
@@ -120,14 +127,35 @@ class Scanner(MDScreen):
         self.ids.qr_amount.text = ''
 
 class Products(MDScreen):
+    prd_name = ObjectProperty(None)
+    prd_cont = ObjectProperty(None)
+    prd_amt = ObjectProperty(None)
+
     def save_product(self):
-        prd_name = self.ids.product_name.text
-        prd_cont = self.ids.product_value.text
-        prd_amnt = self.ids.product_amount.text
         user_id = self.parent.ids.usr.user_id.text
 
-        qrg.gerar_qrcode(prd_name, prd_cont, prd_amnt)
-        db.save_product(prd_name, prd_cont, user_id, prd_amnt)
+        def show_errors(local, error):
+            if local == 'prd_name':
+                self.prd_name.helper_text = error
+                self.prd_name.error = True
+            elif local == 'prd_cont':
+                self.prd_cont.helper_text = error
+                self.prd_cont.error = True
+            elif local == 'prd_amt':
+                self.prd_amt.helper_text = error
+                self.prd_amt.error = True
+    
+        e = db.save_product(self.prd_name.text, self.prd_cont.text, user_id, self.prd_amt.text)
+
+        if e == 'prd_name_emp':
+            show_errors('prd_name', 'Product Name')
+        elif e == 'prd_cont_emp':
+            show_errors('prd_cont', 'Product Contents')
+        elif e == 'prd_amt_emp':
+            show_errors('prd_amt', 'Product Amount')
+        else:
+            qrg.gerar_qrcode(self.prd_name.text, self.prd_cont.text, self.prd_amt.text)
+
 
 class User(MDScreen):
     user_title = ObjectProperty(None)

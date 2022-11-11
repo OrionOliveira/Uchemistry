@@ -2,6 +2,7 @@
 import pyrebase as pb
 import requests
 import json
+from Firebase import error_handling as err_hd
 
 # Configurações do Banco de Dados
 config = {
@@ -22,49 +23,11 @@ db = firebase.database()
 # Função de cadastro
 def sign_in_db(name, email, password, rpt_pssw):
 
-  # Tratamentos de erros
-  p = ['gmail.com', 'outlook.com', 'hotmail.com', 'yahoo.com']
-
-  def errors(_name, _email, _password, _rpt_pssw):
-    # Campo nome vazio
-    if _name == '':
-      return True, 'nm_emp'
-    # Campo email vazio
-    elif _email == '':
-      return True, 'email_emp'
-    # Campo senha vazio
-    elif _password == '':
-      return True, 'pssw_emp'
-    # Campo repita a senha vazio
-    elif _rpt_pssw == '':
-      return True, ''
-    # Senhas não conferem
-    elif _password != _rpt_pssw:
-      return True, 'pssw_nc'
-    # Senha tem menos de 6 caracteres
-    elif len(_password) < 6:
-      return True, 'wk_pssw'
-  # Provedor de email inválido
-    elif p[0] not in _email or p[1] not in _email or p[2] not in _email or p[3] not in _email:
-      if p[0] in _email:
-        print(f'Email possue o provedor {p[0]}')
-        return False, 'Valid Email'
-      elif p[1] in _email:
-        print(f'Email possue o provedor {p[1]}')
-        return False, 'Valid Email'
-      elif p[2] in _email:
-        print(f'Email possue o provedor {p[2]}')
-        return False, 'Valid Email'
-      elif p[3] in _email:
-        print(f'Email possue o provedor {p[3]}')
-        return False, 'Valid Email'
-      else:
-        print(f'Email não pertence a provedores válidos')
-        return True, 'inv_prv'
-  # Caso não haja nenhum erro na digitação das informações, tenta cadastrar
-  e = errors(name, email, password, rpt_pssw)
-  # Se não tiver erro, retorna o ID do usuário
-  if e[0] == False:
+  # Verifica se há erros com as informações que o usuário passou
+  error = err_hd.signin_errors(name, email, password, rpt_pssw)
+  
+  # Se não houver erros, tenta criar o usuário e retorn o UID (Id do usuário)
+  if error[0] == False:
       try:
         auth_token = auth.create_user_with_email_and_password(email, password)
         token_id = auth_token['idToken']
@@ -77,7 +40,8 @@ def sign_in_db(name, email, password, rpt_pssw):
         }
         db.child('Users').child('UIDs').child(UserID).set(data)
         return UserID
-      # Se houver erro no cadastro:
+
+      # Se não conseguir criar o usuário retorna o erro:
       except requests.HTTPError as e:
           error_json = e.args[1]
           error = json.loads(error_json)['error']['message']
@@ -88,14 +52,14 @@ def sign_in_db(name, email, password, rpt_pssw):
             return 'email_exst'
           elif error == 'WEAK_PASSWORD':
             return 'wk_pssw'
-  # Se tiver erro, a função retorna o erro
+  # Se houver erros de informações, a função retorna o erro para ser mostrado no front-end
   else:
-    return e[1]
+    return error[1]
 
 # Função de Login
 def login_db(email, senha):
   if email == '':
-    return ''
+    return 'email_emp'
   else:
     try:
       auth_token = auth.sign_in_with_email_and_password(email, senha)
@@ -126,9 +90,15 @@ def login_db(email, senha):
         print(error)
 
 def save_product(product_name, product_content, user_id, product_amount):
-  data = {
-    'description': f'{product_content}',
-    'amount': f'{product_amount}',
-    'name': f'{product_name}'
-  }
-  res = db.child('Users').child(f"{'UIDs'}").child(user_id).child('Products').push(data)
+  qre = err_hd.qr_errors(product_name, product_content, product_amount)
+  print(qre)
+  if qre[0] == False:
+    data = {
+      'description': f'{product_content}',
+      'amount': f'{product_amount}',
+      'name': f'{product_name}'
+    }
+    db.child('Users').child(f"{'UIDs'}").child(user_id).child('Products').push(data)
+    return 'Valid Product'
+  else:
+    return qre[1]

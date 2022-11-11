@@ -46,6 +46,11 @@
             pos_hint: {'center_x': 0.5, 'center_y': 0.3}
             on_release: root.product_screen()
             size_hint_x: .6
+        MDRectangleFlatButton:
+            text: 'Product Screen'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+            on_release: app.root.current = 'product_screen'
+            size_hint_x: .6
 
 <Scanner>:
     FloatLayout:
@@ -89,6 +94,10 @@
                     pos_hint: {'center_x': .5, 'center_y': .3}
 
 <Products>:
+    prd_name: product_name
+    prd_cont: product_value
+    prd_amt: product_amount
+
     FloatLayout:
         MDTopAppBar:
             md_bg_color: 0.5, 0, 0.5, 1
@@ -100,33 +109,30 @@
             text: 'Products'
             font_size: 50
             pos_hint: {'center_x': 0.7, 'center_y': 0.75}
-        MDLabel:
-            text: 'Name'
-            font_size: 15
-            pos_hint: {'center_x': 0.58, 'center_y': 0.55}
         MDTextField:
             id: product_name
             hint_text: 'Enter product name:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             size_hint_x: None
             width: 250
-        MDLabel:
-            text: 'Contents'
-            font_size: 15
-            pos_hint: {'center_x': 0.58, 'center_y': 0.45}
         MDTextField:
             id: product_value
             hint_text: 'Enter product contents:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
             pos_hint: {'center_x': 0.5, 'center_y': 0.4}
             size_hint_x: None
             width: 250
-        MDLabel:
-            text: 'Amount'
-            font_size: 15
-            pos_hint: {'center_x': 0.58, 'center_y': 0.35}
         MDTextField:
             id: product_amount
             hint_text: 'Enter product amount:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
             pos_hint: {'center_x': 0.5, 'center_y': 0.3}
             size_hint_x: None
             width: 250
