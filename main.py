@@ -62,6 +62,9 @@ class SignIn(MDScreen):
         elif x == 'email_emp':
             self.user_email.helper_text = 'Email'
             self.user_email.error = True
+        elif x == 'inv_prv':
+            self.user_email.helper_text = 'Invalid email provider (@xxx)'
+            self.user_email.error = True
         else:
             self.parent.current = 'product_screen'
             self.parent.ids.usr.user_name.text = str(self.user_name.text)
