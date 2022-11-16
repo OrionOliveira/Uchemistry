@@ -1,0 +1,50 @@
+##:kivy!
+
+<ProductScreen>:
+    prd_name: product_name
+    prd_cont: product_value
+    prd_amt: product_amount
+
+    FloatLayout:
+        MDTopAppBar:
+            md_bg_color: 0.5, 0, 0.5, 1
+            pos_hint: {'top': 1}
+            title: 'Uchemistry - Products'
+            right_action_items:
+                [["home", lambda x: app.go_home()]]
+        MDLabel:
+            text: 'Products'
+            font_size: 50
+            pos_hint: {'center_x': 0.7, 'center_y': 0.75}
+        MDTextField:
+            id: product_name
+            hint_text: 'Enter product name:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint_x: None
+            width: 250
+        MDTextField:
+            id: product_value
+            hint_text: 'Enter product contents:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+            size_hint_x: None
+            width: 250
+        MDTextField:
+            id: product_amount
+            hint_text: 'Enter product amount:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            size_hint_x: None
+            width: 250
+        MDRectangleFlatButton:
+            text: 'QR Code Generator'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+            on_release: root.save_product()
+            

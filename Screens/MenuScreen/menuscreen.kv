@@ -1,0 +1,29 @@
+##:kivy!
+
+<MenuScreen>:
+    FloatLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            md_bg_color: 0.5, 0, 0.5, 1
+            pos_hint: {'top': 1}
+            title: 'Uchemistry'
+            right_action_items: [["account-box", lambda x: root.go_sign()]]
+        Image:
+            source: 'Images/app_icon.png'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+            size_hint: (0.4, 0.4)
+        MDRectangleFlatButton:
+            text: 'Scanner'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+            on_release: app.root.current = 'scanner_screen'
+            size_hint_x: .6
+        MDRectangleFlatButton:
+            text: 'Add Products'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            on_release: root.product_screen()
+            size_hint_x: .6
+        MDRectangleFlatButton:
+            text: 'Product Screen'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+            on_release: app.root.current = 'product_screen'
+            size_hint_x: .6

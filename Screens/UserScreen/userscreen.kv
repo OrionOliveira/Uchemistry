@@ -1,0 +1,21 @@
+##:kivy!
+
+<UserScreen>:
+    user_title: user_bar
+    user_name: user_title
+    user_id: user_id
+
+    FloatLayout:
+        MDTopAppBar:
+            id: user_bar
+            md_bg_color: 0.5, 0, 0.5, 1
+            pos_hint: {'top': 1}
+            title: 'Uchemistry - user name'
+            left_action_items:
+                [["arrow-left", lambda x: app.go_home()]]
+        Label:
+            id: user_title
+            text: 'User'
+        Label:
+            id: user_id
+            text: 'User'

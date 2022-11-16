@@ -1,0 +1,56 @@
+##:kivy!
+
+<LoginScreen>:
+    user_name: user_name
+    user_email: user_email
+    user_password: user_password
+
+    FloatLayout:
+        MDTopAppBar:
+            id: user_bar
+            md_bg_color: 0.5, 0, 0.5, 1
+            pos_hint: {'top': 1}
+            title: 'Uchemistry - Login'
+            left_action_items:
+                [["arrow-left", lambda x: app.go_home()]]
+        Image:
+            source: 'Images/app_icon.png'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+            size_hint: (0.4, 0.4)
+        MDTextField:
+            id: user_email
+            hint_text: 'Enter your email:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            icon_right: 'email'
+            icon_right_color: app.theme_cls.primary_color
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint_x: None
+            width: 250
+        MDTextField:
+            id: user_password
+            hint_text: 'Enter your password:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            password: True
+            icon_right: 'lock'
+            icon_right_color: app.theme_cls.primary_color
+            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+            size_hint_x: None
+            width: 250
+        MDRaisedButton:
+            text: 'Login'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            size_hint_x: .8
+            on_release: root.login()
+        MDTextButton:
+            text: "Don't have an account? Sing up"
+            text_color: 0, 0, 1, 1
+            font_size: 14
+            pos_hint: {'center_x': 0.5, 'center_y': 0.22}
+            on_press: app.root.current = 'signin_screen'
+        Label:
+            id: user_name
+            text: ''

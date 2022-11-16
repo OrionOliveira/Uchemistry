@@ -1,0 +1,70 @@
+##:kivy!
+
+<SignInScreen>:
+    user_name: user_name
+    user_email: user_email
+    user_password: user_password
+    repeated_password: rpt_pssw
+
+    FloatLayout:
+        MDTopAppBar:
+            md_bg_color: 0.5, 0, 0.5, 1
+            pos_hint: {'top': 1}
+            title: 'Uchemistry - Sign In'
+            left_action_items:
+                [["arrow-left", lambda x: app.go_home()]]
+        Image:
+            source: 'Images/app_icon.png'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.77}
+            size_hint: (0.3, 0.3)
+        MDTextField:
+            id: user_name
+            hint_text: 'Enter your name:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+            icon_right: 'account'
+            icon_right_color: app.theme_cls.primary_color
+            size_hint_x: None
+            width: 250
+        MDTextField:
+            id: user_email
+            hint_text: 'Enter your email:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            icon_right: 'email'
+            icon_right_color: app.theme_cls.primary_color
+            size_hint_x: None
+            width: 250
+        MDTextField:
+            id: user_password
+            hint_text: 'Enter your password:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+            password: True
+            icon_right: 'lock'
+            icon_right_color: app.theme_cls.primary_color
+            size_hint_x: None
+            width: 250
+        MDTextField:
+            id: rpt_pssw
+            hint_text: 'Repeat your password:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            password: True
+            icon_right: 'lock'
+            icon_right_color: app.theme_cls.primary_color
+            size_hint_x: None
+            width: 250
+        MDRectangleFlatButton:
+            text: 'Sign In'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+            size_hint_x: .8
+            on_release: root.sign_in()
