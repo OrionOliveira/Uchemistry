@@ -1,4 +1,5 @@
 ##:kivy!
+#:import sm Screens.screenmanager.MainScreenManager
 
 <MenuScreen>:
     FloatLayout:
@@ -7,7 +8,7 @@
             md_bg_color: 0.5, 0, 0.5, 1
             pos_hint: {'top': 1}
             title: 'Uchemistry'
-            right_action_items: [["account-box", lambda x: root.go_sign()]]
+            right_action_items: [["account-box", lambda x: app.change_screen('usr')]]
         Image:
             source: 'Images/app_icon.png'
             pos_hint: {'center_x': 0.5, 'center_y': 0.6}
@@ -15,15 +16,15 @@
         MDRectangleFlatButton:
             text: 'Scanner'
             pos_hint: {'center_x': 0.5, 'center_y': 0.4}
-            on_release: app.root.current = 'scanner_screen'
+            on_release: app.change_screen('scan')
             size_hint_x: .6
         MDRectangleFlatButton:
             text: 'Add Products'
             pos_hint: {'center_x': 0.5, 'center_y': 0.3}
-            on_release: root.product_screen()
+            on_release: app.change_screen('prd')
             size_hint_x: .6
         MDRectangleFlatButton:
             text: 'Product Screen'
             pos_hint: {'center_x': 0.5, 'center_y': 0.2}
-            on_release: app.root.current = 'product_screen'
+            on_release: app.change_screen('product')
             size_hint_x: .6

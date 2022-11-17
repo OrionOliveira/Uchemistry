@@ -1,0 +1,45 @@
+##:kivy!
+
+<StockScreen>:
+    FloatLayout:
+        BoxLayout:
+            orientation: 'vertical'
+            MDTopAppBar:
+                md_bg_color: 0.5, 0, 0.5, 1
+                pos_hint: {'top': 1}
+                title: 'Uchemistry - Products'
+                right_action_items:
+                    [["home", lambda x: app.change_screen('menu')]]
+            MDTextField:
+                hint_text: 'Enter product name'
+                pos_hint: {'center_x': 0.5, 'center_y': 0.9}
+                size_hint_x: None
+                width: 270
+            MDRectangleFlatIconButton:
+                icon: 'plus-circle'
+                text: 'Add Product'
+                pos_hint: {'center_x': 0.25, 'center_y': 0.8}
+                on_release: app.change_screen('prd')
+            ScrollView:
+                MDList:
+                    id: list
+                    OneLineAvatarIconListItem:
+                        text: 'Radioativo'
+                        IconLeftWidget:
+                            icon: 'radioactive'
+                        IconRightWidget:
+                            icon: 'numeric-3'
+                    OneLineAvatarIconListItem:
+                        text: 'Não Radioativo'
+                        IconLeftWidget:
+                            icon: 'radioactive-off'
+                        IconRightWidget:
+                            icon: 'numeric-9' 
+                    OneLineAvatarIconListItem:
+                        text: 'Não Radioativo'
+                        IconLeftWidget:
+                            icon: 'bottle-tonic-plus'
+                        IconRightWidget:
+                            icon: 'numeric-5'
+
+        

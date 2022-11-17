@@ -11,7 +11,8 @@
             pos_hint: {'top': 1}
             title: 'Uchemistry - Products'
             right_action_items:
-                [["home", lambda x: app.go_home()]]
+                [["home", lambda x: app.change_screen('menu')],
+                ["list-box-outline", lambda x: app.change_screen('stck')]]
         MDLabel:
             text: 'Products'
             font_size: 50

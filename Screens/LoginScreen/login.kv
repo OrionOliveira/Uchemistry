@@ -12,7 +12,7 @@
             pos_hint: {'top': 1}
             title: 'Uchemistry - Login'
             left_action_items:
-                [["arrow-left", lambda x: app.go_home()]]
+                [["arrow-left", lambda x: app.change_screen('menu')]]
         Image:
             source: 'Images/app_icon.png'
             pos_hint: {'center_x': 0.5, 'center_y': 0.7}
@@ -50,7 +50,7 @@
             text_color: 0, 0, 1, 1
             font_size: 14
             pos_hint: {'center_x': 0.5, 'center_y': 0.22}
-            on_press: app.root.current = 'signin_screen'
+            on_press: app.change_screen('sgn')
         Label:
             id: user_name
             text: ''

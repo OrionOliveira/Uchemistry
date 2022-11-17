@@ -11,16 +11,22 @@
             Rectangle:
                 pos: self.pos
                 size: self.size
-        MDTopAppBar:
-            md_bg_color: 0.5, 0, 0.5, 1
-            pos_hint: {'top': 1}
-            title: 'UChemistry - Scanner'
-            right_action_items:
-                [["home", lambda x: app.go_home()]]
-        ZBarCam:
-            id: zbarcam
-            on_symbols: if self.symbols: root.read_qr(self.symbols[0].data)
-            pos_hint: {'center_x': .5, 'center_y': .5}
+        MDBoxLayout:
+            spacing: 5
+            orientation: 'vertical'
+            MDTopAppBar:
+                md_bg_color: 0.5, 0, 0.5, 1
+                pos_hint: {'top': 1}
+                title: 'UChemistry - Scanner'
+                right_action_items:
+                    [["home", lambda x: app.change_screen('menu')]]
+            ZBarCam:
+                id: zbarcam
+                on_symbols: if self.symbols: root.read_qr(self.symbols[0].data)
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                adaptive_size: True
+                adaptive_height: True
+                adaptive_width: True
         MDRaisedButton:
             text: 'Clear'
             pos_hint: {'center_x': 0.8, 'center_y': 0.276}
