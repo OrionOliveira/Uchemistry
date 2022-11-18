@@ -1,10 +1,10 @@
 from kivymd.uix.screen import MDScreen
 from kivy.properties import ObjectProperty
 from Firebase import database as db
-from Screens.UserScreen.user import UserScreen
+from Screens.UserScreen.user import UserScreen as usr
 
 class LoginScreen(MDScreen):
-    usr = UserScreen()
+    usr = usr()
 
     user_name = ObjectProperty(None)
     user_email = ObjectProperty(None)
@@ -34,7 +34,7 @@ class LoginScreen(MDScreen):
         elif x == None:
             print('Senha vazia')
         else:
-            self.parent.current = 'product_screen'
+            self.parent.current = 'stock_screen'
             #self.usr.ids.user_name.text = x[0]
             #self.usr.ids.user_title.title = f"Uchemistry - {x[0]}"
             #self.usr.ids.user_id.text = x[1]

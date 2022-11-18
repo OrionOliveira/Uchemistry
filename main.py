@@ -3,8 +3,7 @@ from kivymd.app import MDApp
 from kaki.app import App
 from kivy.factory import Factory
 from kivy.core.window import Window
-from Screens.screenmanager import MainScreenManager  as sm
-from Screens.UserScreen.user import UserScreen as usr
+from Firebase import database as db
 
 Window.size = (300, 600)
 
@@ -48,16 +47,20 @@ class UChemistry(MDApp, App):
         self.usr = Factory.UserScreen()
         return self.sm
 
+    def on_start(self):
+        x = db.stocked_products()
+
+
     def change_screen(self, btn):
         self.btn = btn
-        user_name = self.usr.user_name.text
+        user_name = self.usr.get_info()
 
         def go_screen(scr):
-            self.sm.current = scr 
+            self.sm.current = scr
+            print(user_name)
 
         if btn == 'prd':
-            print(user_name)
-            if user_name == 'User':
+            if user_name[0] == 'User':
                 go_screen('login_screen')
             else:
                 go_screen('product_screen')
@@ -66,7 +69,7 @@ class UChemistry(MDApp, App):
         elif btn == 'menu':
             go_screen('menu_screen')
         elif btn == 'usr':
-            if user_name == 'User':
+            if user_name[0] == 'User':
                 go_screen('login_screen')
             else:
                 go_screen('user_screen')

@@ -3,6 +3,7 @@ import pyrebase as pb
 import requests
 import json
 from Firebase import error_handling as err_hd
+from Screens.UserScreen.user import UserScreen as usr
 
 # Configurações do Banco de Dados
 config = {
@@ -72,6 +73,8 @@ def login_db(email, senha):
       converted_to_dict = dict(users.val())
       user_name = converted_to_dict[UserID]['name']
       token_id = auth.refresh(auth_token['refreshToken'])
+      user = usr()
+      user.save_user_info(user_name, UserID)
       return user_name, UserID
       
     # Tratamento de erros
@@ -99,6 +102,16 @@ def save_product(product_name, product_content, user_id, product_amount):
       'name': f'{product_name}'
     }
     db.child('Users').child(f"{'UIDs'}").child(user_id).child('Products').push(data)
+    db.child('Stock').child('PIDs').push(data)
     return 'Valid Product'
   else:
     return qre[1]
+
+def stocked_products():
+  all_products = db.child('Stock').child('PIDs').get()
+  return_list = []
+  n = 1
+  for id in all_products.each():
+    return_list.append(id.key())
+    n = n + 1
+  return return_list
