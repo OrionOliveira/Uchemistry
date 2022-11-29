@@ -3,7 +3,6 @@ import pyrebase as pb
 import requests
 import json
 from Firebase import error_handling as err_hd
-from Screens.UserScreen.user import UserScreen as usr
 
 # Configurações do Banco de Dados
 config = {
@@ -73,8 +72,6 @@ def login_db(email, senha):
       converted_to_dict = dict(users.val())
       user_name = converted_to_dict[UserID]['name']
       token_id = auth.refresh(auth_token['refreshToken'])
-      user = usr()
-      user.save_user_info(user_name, UserID)
       return user_name, UserID
       
     # Tratamento de erros

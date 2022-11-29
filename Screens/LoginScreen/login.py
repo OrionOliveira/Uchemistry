@@ -1,11 +1,8 @@
 from kivymd.uix.screen import MDScreen
 from kivy.properties import ObjectProperty
 from Firebase import database as db
-from Screens.UserScreen.user import UserScreen as usr
 
 class LoginScreen(MDScreen):
-    usr = usr()
-
     user_name = ObjectProperty(None)
     user_email = ObjectProperty(None)
     user_password = ObjectProperty(None)

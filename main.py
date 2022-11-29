@@ -13,6 +13,9 @@ class UChemistry(MDApp, App):
     sm = None
     usr = None
 
+    user_name = 'User'
+    user_id = ''
+
     DEBUG = 1
 
     KV_FILES = {
@@ -53,14 +56,21 @@ class UChemistry(MDApp, App):
 
     def change_screen(self, btn):
         self.btn = btn
-        user_name = self.usr.get_info()
+        get_name = self.usr.get_info()
+        user_name = get_name[0]
 
         def go_screen(scr):
-            self.sm.current = scr
-            print(user_name)
+            if btn == 'prd' or btn == 'usr':
+                if user_name == 'User':
+                    self.sm.current = 'login_screen'
+                else:
+                    self.sm.current = scr
+            else:
+                print(scr)
+                self.sm.current = scr
 
         if btn == 'prd':
-            if user_name[0] == 'User':
+            if user_name == 'User':
                 go_screen('login_screen')
             else:
                 go_screen('product_screen')
@@ -69,7 +79,7 @@ class UChemistry(MDApp, App):
         elif btn == 'menu':
             go_screen('menu_screen')
         elif btn == 'usr':
-            if user_name[0] == 'User':
+            if user_name == 'User':
                 go_screen('login_screen')
             else:
                 go_screen('user_screen')

@@ -1,17 +1,20 @@
 ##:kivy!
 
 <UserScreen>:
-    user_title: user_title
-    user_id: user_id
-
+    userName: user_name
     FloatLayout:
         MDTopAppBar:
             id: user_title
             md_bg_color: 0.5, 0, 0.5, 1
             pos_hint: {'top': 1}
-            title: 'User'
+            title: ''
             left_action_items:
                 [["arrow-left", lambda x: app.change_screen('menu')]]
         MDLabel:
-            id: user_id
+            id: user_name
             text: 'User'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        MDLabel:
+            id: uid
+            text: ''
+            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
