@@ -1,6 +1,7 @@
 from kivymd.uix.screen import MDScreen
 from kivy.properties import ObjectProperty
 from Firebase import database as db
+import json
 
 class SignInScreen(MDScreen):
     user_name = ObjectProperty(None)
@@ -9,6 +10,7 @@ class SignInScreen(MDScreen):
     repeated_password = ObjectProperty(None)
 
     def sign_in(self):
+        user_info = []
         def show_error(local, error):
             if local == 'email':
                 self.user_email.helper_text = error
@@ -25,8 +27,8 @@ class SignInScreen(MDScreen):
 
         # Cadastra o usuário no Firebase
         x = db.sign_in_db(self.user_name.text, self.user_email.text, self.user_password.text, self.repeated_password.text)
-        print(f'X = {x}')
-
+        print(x)
+        user_info.append(x[1])
         # Tratamento de erros
         if x == '':
             pass
@@ -49,7 +51,7 @@ class SignInScreen(MDScreen):
         elif x == 'inv_prv':
             show_error('email','Invalid email provider (@xxx)')
         else:
-            self.parent.current = 'product_screen'
-            self.parent.ids.usr.user_name.text = str(self.user_name.text)
-            self.parent.ids.usr.user_title.title = f"Uchemistry - {str(self.user_name.text)}"
-            self.parent.ids.usr.user_id.text = x
+            self.parent.current = 'stock_screen'
+            with open('Firebase/temp_id.json', 'w') as data:
+                json.dump(user_info, data)
+            

@@ -53,11 +53,12 @@ class UChemistry(MDApp, App):
     def on_start(self):
         x = db.stocked_products()
 
-
     def change_screen(self, btn):
         self.btn = btn
-        get_name = self.usr.get_info()
-        user_name = get_name[0]
+        try:
+            user_name = db.account_info()
+        except:
+            user_name = 'User'
 
         def go_screen(scr):
             if btn == 'prd' or btn == 'usr':
@@ -85,8 +86,6 @@ class UChemistry(MDApp, App):
                 go_screen('user_screen')
         elif btn == 'sgn':
             go_screen('signin_screen')
-        elif btn == 'product':
-            go_screen('product_screen')
         elif btn == 'stck':
             go_screen('stock_screen')
 

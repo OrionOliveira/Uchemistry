@@ -1,5 +1,5 @@
 # Tratamentos de erros
-p = ['gmail.com', 'outlook.com', 'hotmail.com', 'yahoo.com']
+p = ['gmail.com', 'outlook.com', 'hotmail.com', 'yahoo.com', 'unesp.br']
 
 def signin_errors(_name, _email, _password, _rpt_pssw):
     # Campo nome vazio
@@ -21,7 +21,7 @@ def signin_errors(_name, _email, _password, _rpt_pssw):
     elif len(_password) < 6:
       return True, 'wk_pssw'
   # Provedor de email inválido
-    elif p[0] not in _email or p[1] not in _email or p[2] not in _email or p[3] not in _email:
+    elif p[0] not in _email or p[1] not in _email or p[2] not in _email or p[3] not in _email or p[4] not in _email:
       if p[0] in _email:
         print(f'Email possue o provedor {p[0]}')
         return False, 'Valid Email'
@@ -33,6 +33,9 @@ def signin_errors(_name, _email, _password, _rpt_pssw):
         return False, 'Valid Email'
       elif p[3] in _email:
         print(f'Email possue o provedor {p[3]}')
+        return False, 'Valid Email'
+      elif p[4] in _email:
+        print(f'Email possue o provedor {p[4]}')
         return False, 'Valid Email'
       else:
         print(f'Email não pertence a provedores válidos')

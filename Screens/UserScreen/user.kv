@@ -10,11 +10,20 @@
             title: ''
             left_action_items:
                 [["arrow-left", lambda x: app.change_screen('menu')]]
+        MDRectangleFlatButton:
+            id: logout
+            text: 'logout'
+            on_release: root.logout()
+            pos_hint: {'center_x': 0.5, 'center_y': 0.6}
         MDLabel:
             id: user_name
             text: 'User'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+        MDLabel:
+            id: email
+            text: 'Email'
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         MDLabel:
             id: uid
-            text: ''
+            text: 'UID'
             pos_hint: {'center_x': 0.5, 'center_y': 0.4}

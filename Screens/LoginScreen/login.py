@@ -1,6 +1,7 @@
 from kivymd.uix.screen import MDScreen
 from kivy.properties import ObjectProperty
 from Firebase import database as db
+import json
 
 class LoginScreen(MDScreen):
     user_name = ObjectProperty(None)
@@ -8,6 +9,7 @@ class LoginScreen(MDScreen):
     user_password = ObjectProperty(None)
 
     def login(self):
+        user_info = []
         def show_error(local, error):
             if local == 'email':
                 self.user_email.helper_text = error
@@ -17,7 +19,7 @@ class LoginScreen(MDScreen):
                 self.user_password.error = True
 
         x = db.login_db(self.user_email.text, self.user_password.text)
-        print(f'x = {x}')
+        user_info.append(x[1])
         if x == 'email_emp':
             show_error('email', 'Email')
         elif x == 'email_nf':
@@ -32,6 +34,5 @@ class LoginScreen(MDScreen):
             print('Senha vazia')
         else:
             self.parent.current = 'stock_screen'
-            #self.usr.ids.user_name.text = x[0]
-            #self.usr.ids.user_title.title = f"Uchemistry - {x[0]}"
-            #self.usr.ids.user_id.text = x[1]
+            with open('Firebase/temp_id.json', 'w') as data:
+                json.dump(user_info, data)

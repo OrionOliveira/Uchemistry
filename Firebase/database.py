@@ -26,7 +26,7 @@ def sign_in_db(name, email, password, rpt_pssw):
   # Verifica se há erros com as informações que o usuário passou
   error = err_hd.signin_errors(name, email, password, rpt_pssw)
   
-  # Se não houver erros, tenta criar o usuário e retorn o UID (Id do usuário)
+  # Se não houver erros, tenta criar o usuário e retorna o UID (Id do usuário)
   if error[0] == False:
       try:
         auth_token = auth.create_user_with_email_and_password(email, password)
@@ -38,7 +38,8 @@ def sign_in_db(name, email, password, rpt_pssw):
           'email': email,
           'name': name
         }
-        db.child('Users').child('UIDs').child(UserID).set(data)
+
+        a = db.child(f'Users/UIDs/{UserID}/Info').set(data, token_id)
         return UserID
 
       # Se não conseguir criar o usuário retorna o erro:
@@ -68,9 +69,11 @@ def login_db(email, senha):
       UserID = auth.get_account_info(token_id)['users'][0]['localId']
 
       # Retorna nome de usuário
-      users = db.child('Users').child('UIDs').get()
+      users = db.child(f'Users/UIDs/{UserID}/Info').get()
+      print(users.val())
       converted_to_dict = dict(users.val())
-      user_name = converted_to_dict[UserID]['name']
+      print(converted_to_dict)
+      user_name = converted_to_dict['name']
       token_id = auth.refresh(auth_token['refreshToken'])
       return user_name, UserID
       
@@ -112,3 +115,15 @@ def stocked_products():
     return_list.append(id.key())
     n = n + 1
   return return_list
+
+def account_info():
+  lista = []
+  try:
+    with open('Firebase/temp_id.json', 'r') as data:
+      lista = json.load(data)
+      user_info = db.child(f'Users/UIDs/{lista[0]}').get() # Essa linha está causando conflito
+      for info in user_info.each():
+        print(f'info.val: {info.val()}')
+    return info.val()['name']
+  except:
+    raise Exception('Empty file')
