@@ -20,7 +20,7 @@ firebase = pb.initialize_app(config)
 auth = firebase.auth()
 db = firebase.database()
 
-# Função de cadastro
+# Function to Sign in
 def sign_in_db(name, email, password, rpt_pssw):
 
   # Verifica se há erros com as informações que o usuário passou
@@ -57,7 +57,7 @@ def sign_in_db(name, email, password, rpt_pssw):
   else:
     return error[1]
 
-# Função de Login
+# Function to Login
 def login_db(email, senha):
   if email == '':
     return 'email_emp'
@@ -92,6 +92,7 @@ def login_db(email, senha):
       else:
         print(error)
 
+# Function to Save products
 def save_product(product_name, product_content, user_id, product_amount):
   qre = err_hd.qr_errors(product_name, product_content, product_amount)
   print(qre)
@@ -107,21 +108,21 @@ def save_product(product_name, product_content, user_id, product_amount):
   else:
     return qre[1]
 
+# Function to return stocked products
 def stocked_products():
-  all_products = db.child('Stock').child('PIDs').get()
+  all_products = db.child('Stock/PIDs').get()
   return_list = []
-  n = 1
   for id in all_products.each():
     return_list.append(id.key())
-    n = n + 1
   return return_list
 
+# Function to return account information
 def account_info():
   lista = []
   try:
     with open('Firebase/temp_id.json', 'r') as data:
       lista = json.load(data)
-      user_info = db.child(f'Users/UIDs/{lista[0]}').get() # Essa linha está causando conflito
+      user_info = db.child(f'Users/UIDs/{lista[0]}').get()
       for info in user_info.each():
         print(f'info.val: {info.val()}')
     return info.val()['name']

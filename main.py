@@ -12,6 +12,8 @@ Window.size = (300, 600)
 class UChemistry(MDApp, App):
     sm = None
     usr = None
+    sgs = None
+    lgs = None
 
     user_name = 'User'
     user_id = ''
@@ -41,18 +43,23 @@ class UChemistry(MDApp, App):
     }
 
     AUTORELOADER_PATHS = [
-        (".", {"recursive": True}),
+        (".", {"recursive": False}),
     ]
-
+    # Function to build the app
     def build_app(self):
         self.theme_cls.primary_palette = 'Purple'
         self.sm = Factory.MainScreenManager()
         self.usr = Factory.UserScreen()
+        self.sgs = Factory.SignInScreen()
         return self.sm
 
     def on_start(self):
+        # return all save products
         x = db.stocked_products()
+        print(f'x = {x}')
+        # create a widget for each product
 
+# Function to change screen
     def change_screen(self, btn):
         self.btn = btn
         try:
@@ -60,6 +67,7 @@ class UChemistry(MDApp, App):
         except:
             user_name = 'User'
 
+        # General function to go to screen
         def go_screen(scr):
             if btn == 'prd' or btn == 'usr':
                 if user_name == 'User':
