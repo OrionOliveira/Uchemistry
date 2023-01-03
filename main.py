@@ -4,6 +4,7 @@ from kaki.app import App
 from kivy.factory import Factory
 from kivy.core.window import Window
 from Firebase import database as db
+import json
 
 Window.size = (300, 600)
 
@@ -16,7 +17,7 @@ class UChemistry(MDApp, App):
     lgs = None
 
     user_name = 'User'
-    user_id = ''
+    userid = []
 
     DEBUG = 1
 
@@ -45,6 +46,7 @@ class UChemistry(MDApp, App):
     AUTORELOADER_PATHS = [
         (".", {"recursive": False}),
     ]
+
     # Function to build the app
     def build_app(self):
         self.theme_cls.primary_palette = 'Purple'
@@ -78,11 +80,11 @@ class UChemistry(MDApp, App):
                 print(scr)
                 self.sm.current = scr
 
-        if btn == 'prd':
+        if btn == 'stck':
             if user_name == 'User':
                 go_screen('login_screen')
             else:
-                go_screen('product_screen')
+                go_screen('stock_screen')
         elif btn == 'scan':
             go_screen('scanner_screen')
         elif btn == 'menu':
@@ -94,8 +96,8 @@ class UChemistry(MDApp, App):
                 go_screen('user_screen')
         elif btn == 'sgn':
             go_screen('signin_screen')
-        elif btn == 'stck':
-            go_screen('stock_screen')
+        elif btn == 'prd':
+            go_screen('product_screen')
 
 if __name__=='__main__':
     UChemistry().run()

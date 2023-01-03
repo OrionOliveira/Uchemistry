@@ -10,6 +10,7 @@ class LoginScreen(MDScreen):
 
     def login(self):
         user_info = []
+
         def show_error(local, error):
             if local == 'email':
                 self.user_email.helper_text = error
@@ -19,6 +20,7 @@ class LoginScreen(MDScreen):
                 self.user_password.error = True
 
         x = db.login_db(self.user_email.text, self.user_password.text)
+        print(x)
         user_info.append(x[1])
         if x == 'email_emp':
             show_error('email', 'Email')

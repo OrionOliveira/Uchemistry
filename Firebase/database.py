@@ -46,7 +46,7 @@ def sign_in_db(name, email, password, rpt_pssw):
       except requests.HTTPError as e:
           error_json = e.args[1]
           error = json.loads(error_json)['error']['message']
-          print(error)
+          print(f'database.py[sign_in_db]: {error}')
           if error == 'INVALID_EMAIL':
             return 'inv_email'
           elif error == 'EMAIL_EXISTS':
@@ -65,14 +65,14 @@ def login_db(email, senha):
     try:
       auth_token = auth.sign_in_with_email_and_password(email, senha)
       token_id = auth_token['idToken']
-      # Retorna ID do usuário
+      # Return User ID
       UserID = auth.get_account_info(token_id)['users'][0]['localId']
 
-      # Retorna nome de usuário
+      # Return User name
       users = db.child(f'Users/UIDs/{UserID}/Info').get()
-      print(users.val())
+      print(f'database.py[login_db]: {users.val()}')
       converted_to_dict = dict(users.val())
-      print(converted_to_dict)
+      print(f'database.py[login_db]: {converted_to_dict}')
       user_name = converted_to_dict['name']
       token_id = auth.refresh(auth_token['refreshToken'])
       return user_name, UserID
@@ -90,12 +90,12 @@ def login_db(email, senha):
       elif error == 'INVALID_PASSWORD':
         return 'inv_pssw'
       else:
-        print(error)
+        print(f'database.py[login_db]: {error}')
 
 # Function to Save products
 def save_product(product_name, product_content, user_id, product_amount):
   qre = err_hd.qr_errors(product_name, product_content, product_amount)
-  print(qre)
+  print(f'database.py[save_product]: {qre}')
   if qre[0] == False:
     data = {
       'description': f'{product_content}',
@@ -124,7 +124,7 @@ def account_info():
       lista = json.load(data)
       user_info = db.child(f'Users/UIDs/{lista[0]}').get()
       for info in user_info.each():
-        print(f'info.val: {info.val()}')
-    return info.val()['name']
+        print(f'database.py[account_info](info.val()): {info.val()}')
+    return info.val()
   except:
     raise Exception('Empty file')

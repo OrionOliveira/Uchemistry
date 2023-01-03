@@ -2,6 +2,9 @@
 
 <UserScreen>:
     userName: user_name
+    userEmail: email
+    user_id: uid
+
     FloatLayout:
         MDTopAppBar:
             id: user_title
@@ -14,7 +17,7 @@
             id: logout
             text: 'logout'
             on_release: root.logout()
-            pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+            pos_hint: {'center_x': 0.5, 'center_y': 0.2}
         MDLabel:
             id: user_name
             text: 'User'
@@ -25,5 +28,5 @@
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         MDLabel:
             id: uid
-            text: 'UID'
-            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+            text: 'user_id'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.02}
