@@ -8,6 +8,10 @@ class LoginScreen(MDScreen):
     user_email = ObjectProperty(None)
     user_password = ObjectProperty(None)
 
+    def on_pre_enter(self):
+        self.user_email.text = ''
+        self.user_password.text = ''
+
     def login(self):
         user_info = []
 
@@ -20,7 +24,6 @@ class LoginScreen(MDScreen):
                 self.user_password.error = True
 
         x = db.login_db(self.user_email.text, self.user_password.text)
-        print(x)
         user_info.append(x[1])
         if x == 'email_emp':
             show_error('email', 'Email')
@@ -35,6 +38,6 @@ class LoginScreen(MDScreen):
         elif x == None:
             print('Senha vazia')
         else:
-            self.parent.current = 'stock_screen'
+            self.parent.current = 'menu_screen'
             with open('Firebase/temp_id.json', 'w') as data:
                 json.dump(user_info, data)

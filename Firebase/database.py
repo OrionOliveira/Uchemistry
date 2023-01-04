@@ -70,9 +70,7 @@ def login_db(email, senha):
 
       # Return User name
       users = db.child(f'Users/UIDs/{UserID}/Info').get()
-      print(f'database.py[login_db]: {users.val()}')
       converted_to_dict = dict(users.val())
-      print(f'database.py[login_db]: {converted_to_dict}')
       user_name = converted_to_dict['name']
       token_id = auth.refresh(auth_token['refreshToken'])
       return user_name, UserID

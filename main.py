@@ -27,8 +27,7 @@ class UChemistry(MDApp, App):
         os.path.join(os.getcwd(), "Screens/SignInScreen/signin.kv"),
         os.path.join(os.getcwd(), "Screens/LoginScreen/login.kv"),
         os.path.join(os.getcwd(), "Screens/ScannerScreen/scanner.kv"),
-        os.path.join(os.getcwd(), "Screens/ProductScreen/product.kv"),
-        os.path.join(os.getcwd(), "Screens/ProductScreen/StockScreen/stock.kv"),
+        os.path.join(os.getcwd(), "Screens/StockScreen/stock.kv"),
         os.path.join(os.getcwd(), "Screens/UserScreen/user.kv"),
     }
 
@@ -38,8 +37,7 @@ class UChemistry(MDApp, App):
         "SignInScreen": "Screens.SignInScreen.signin",
         "LoginScreen": "Screens.LoginScreen.login",
         "ScannerScreen": "Screens.ScannerScreen.scanner",
-        "ProductScreen": "Screens.ProductScreen.product",
-        "StockScreen": "Screens.ProductScreen.StockScreen.stock",
+        "StockScreen": "Screens.StockScreen.stock",
         "UserScreen": "Screens.UserScreen.user",
     }
 
@@ -58,7 +56,7 @@ class UChemistry(MDApp, App):
     def on_start(self):
         # return all save products
         x = db.stocked_products()
-        print(f'x = {x}')
+        print(f'stocked products: {x}')
         # create a widget for each product
 
 # Function to change screen
@@ -71,7 +69,7 @@ class UChemistry(MDApp, App):
 
         # General function to go to screen
         def go_screen(scr):
-            if btn == 'prd' or btn == 'usr':
+            if btn == 'stck' or btn == 'usr':
                 if user_name == 'User':
                     self.sm.current = 'login_screen'
                 else:
@@ -96,8 +94,6 @@ class UChemistry(MDApp, App):
                 go_screen('user_screen')
         elif btn == 'sgn':
             go_screen('signin_screen')
-        elif btn == 'prd':
-            go_screen('product_screen')
 
 if __name__=='__main__':
     UChemistry().run()

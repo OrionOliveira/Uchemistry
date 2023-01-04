@@ -9,6 +9,12 @@ class SignInScreen(MDScreen):
     user_password = ObjectProperty(None)
     repeated_password = ObjectProperty(None)
 
+    def on_pre_enter(self):
+        self.user_name.text = ''
+        self.user_email.text = ''
+        self.user_password.text = ''
+        self.repeated_password.text = ''
+
     def sign_in(self):
         user_info = []
         def show_error(local, error):
@@ -27,8 +33,7 @@ class SignInScreen(MDScreen):
 
         # Cadastra o usuário no Firebase
         x = db.sign_in_db(self.user_name.text, self.user_email.text, self.user_password.text, self.repeated_password.text)
-        print(x)
-        user_info.append(x[1])
+        user_info.append(x)
         # Tratamento de erros
         if x == '':
             pass
@@ -51,7 +56,7 @@ class SignInScreen(MDScreen):
         elif x == 'inv_prv':
             show_error('email','Invalid email provider (@xxx)')
         else:
-            self.parent.current = 'stock_screen'
+            self.parent.current = 'menu_screen'
             with open('Firebase/temp_id.json', 'w') as data:
                 json.dump(user_info, data)
             
