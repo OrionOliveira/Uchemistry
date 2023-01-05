@@ -74,15 +74,34 @@
                             icon: 'bottle-tonic-plus'
                         IconRightWidget:
                             icon: 'numeric-5'
-                        
-<Content>:
+
+<Product>:
+    prd_name: product_name
+    cas_num: product_cas_num
+    prd_qtde: product_quantity
+
     orientation: "vertical"
     spacing: "12dp"
     size_hint_y: None
-    height: "120dp"
+    height: "200dp"
 
     MDTextField:
-        hint_text: "City"
+        id: product_name
+        hint_text: "Name"
+        helper_text: ''
+        helper_text_mode: 'on_error'
+        required: False
 
     MDTextField:
-        hint_text: "Street"
+        id: product_cas_num
+        hint_text: "CAS Number"
+        helper_text: ''
+        helper_text_mode: 'on_error'
+        required: False
+
+    MDTextField:
+        id: product_quantity
+        hint_text: "Quantity"
+        helper_text: ''
+        helper_text_mode: 'on_error'
+        required: False

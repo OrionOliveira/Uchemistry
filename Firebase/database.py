@@ -91,12 +91,12 @@ def login_db(email, senha):
         print(f'database.py[login_db]: {error}')
 
 # Function to Save products
-def save_product(product_name, product_content, user_id, product_amount):
-  qre = err_hd.qr_errors(product_name, product_content, product_amount)
+def save_product(product_name, product_cas_num, user_id, product_amount):
+  qre = err_hd.qr_errors(product_name, product_cas_num, product_amount)
   print(f'database.py[save_product]: {qre}')
   if qre[0] == False:
     data = {
-      'description': f'{product_content}',
+      'description': f'{product_cas_num}',
       'amount': f'{product_amount}',
       'name': f'{product_name}'
     }
@@ -116,13 +116,16 @@ def stocked_products():
 
 # Function to return account information
 def account_info():
-  lista = []
+    id = get_id()
+    user_info = db.child(f'Users/UIDs/{id}').get()
+    for info in user_info.each():
+      print(f'database.py[account_info](info.val()): {info.val()}')
+    return info.val()
+
+def get_id():
   try:
     with open('Firebase/temp_id.json', 'r') as data:
-      lista = json.load(data)
-      user_info = db.child(f'Users/UIDs/{lista[0]}').get()
-      for info in user_info.each():
-        print(f'database.py[account_info](info.val()): {info.val()}')
-    return info.val()
+        id = json.load(data)
+        return id[0]
   except:
     raise Exception('Empty file')

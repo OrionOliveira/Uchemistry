@@ -24,6 +24,7 @@ class UChemistry(MDApp, App):
     KV_FILES = {
         os.path.join(os.getcwd(), "Screens/screenmanager.kv"),
         os.path.join(os.getcwd(), "Screens/MenuScreen/menu.kv"),
+        os.path.join(os.getcwd(), "Screens/ProductScreen/"),
         os.path.join(os.getcwd(), "Screens/SignInScreen/signin.kv"),
         os.path.join(os.getcwd(), "Screens/LoginScreen/login.kv"),
         os.path.join(os.getcwd(), "Screens/ScannerScreen/scanner.kv"),
