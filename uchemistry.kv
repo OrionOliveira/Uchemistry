@@ -1,0 +1,357 @@
+##:kivy!
+#:import ZBarCam kivy_garden.zbarcam.ZBarCam
+#:import ZBarSymbol pyzbar.pyzbar.ZBarSymbol
+
+<Manager>:
+    MenuScreen:
+        id: mn
+        name: 'menu_screen'
+    ScannerScreen:
+        id: sc 
+        name: 'scanner_screen'
+    SignInScreen:
+        id: sgn
+        name: 'signin_screen'
+    LoginScreen:
+        id: lgn
+        name: 'login_screen'
+    UserScreen:
+        id: usr
+        name: 'user_screen'
+    StockScreen:
+        id: stck
+        name: 'stock_screen'
+
+
+<MenuScreen>:
+    FloatLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            md_bg_color: 0.5, 0, 0.5, 1
+            pos_hint: {'top': 1}
+            title: 'Uchemistry'
+            right_action_items: [["account-box", lambda x: app.change_screen('usr')]]
+        Image:
+            source: 'Images/app_icon.png'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+            size_hint: (0.4, 0.4)
+        MDRectangleFlatButton:
+            text: 'Scanner'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+            on_release: app.change_screen('scan')
+            size_hint_x: .6
+        MDRectangleFlatButton:
+            text: 'Products'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            on_release: app.change_screen('stck')
+            size_hint_x: .6
+
+<ScannerScreen>:
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        MDBoxLayout:
+            spacing: 5
+            orientation: 'vertical'
+            MDTopAppBar:
+                md_bg_color: 0.5, 0, 0.5, 1
+                pos_hint: {'top': 1}
+                title: 'UChemistry - Scanner'
+                right_action_items:
+                    [["home", lambda x: app.change_screen('menu')]]
+            ZBarCam:
+                id: zbarcam
+                on_symbols: if self.symbols: root.read_qr(self.symbols[0].data)
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                adaptive_size: True
+                adaptive_height: True
+                adaptive_width: True
+        MDRaisedButton:
+            text: 'Clear'
+            pos_hint: {'center_x': 0.8, 'center_y': 0.276}
+            size_hint_x: .3
+            on_release: root.clear()
+        MDCard:
+            size_hint: (.9, .2)
+            pos_hint: {'center_x': .5, 'center_y': .13}
+            elevation: 2
+            MDFloatLayout:
+                MDLabel:
+                    id: qr_name
+                    text: ''
+                    pos_hint: {'center_x': .5, 'center_y': .7}
+                MDLabel:
+                    id: qr_contents
+                    text: ''
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                MDLabel:
+                    id: qr_amount
+                    text: ''
+                    pos_hint: {'center_x': .5, 'center_y': .3}
+
+<SignInScreen>:
+    user_name: user_name
+    user_email: user_email
+    user_password: user_password
+    repeated_password: rpt_pssw
+
+    FloatLayout:
+        MDTopAppBar:
+            md_bg_color: 0.5, 0, 0.5, 1
+            pos_hint: {'top': 1}
+            title: 'Uchemistry - Sign In'
+            left_action_items:
+                [["arrow-left", lambda x: app.change_screen('menu')]]
+        Image:
+            source: 'Images/app_icon.png'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.77}
+            size_hint: (0.3, 0.3)
+        MDTextField:
+            id: user_name
+            hint_text: 'Enter your name:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+            icon_right: 'account'
+            icon_right_color: app.theme_cls.primary_color
+            size_hint_x: None
+            width: 250
+        MDTextField:
+            id: user_email
+            hint_text: 'Enter your email:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            icon_right: 'email'
+            icon_right_color: app.theme_cls.primary_color
+            size_hint_x: None
+            width: 250
+        MDTextField:
+            id: user_password
+            hint_text: 'Enter your password:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+            password: True
+            icon_right: 'lock'
+            icon_right_color: app.theme_cls.primary_color
+            size_hint_x: None
+            width: 250
+        MDTextField:
+            id: rpt_pssw
+            hint_text: 'Repeat your password:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            password: True
+            icon_right: 'lock'
+            icon_right_color: app.theme_cls.primary_color
+            size_hint_x: None
+            width: 250
+        MDRectangleFlatButton:
+            text: 'Sign In'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+            size_hint_x: .8
+            on_release: root.sign_in()
+
+<LoginScreen>:
+    user_name: user_name
+    user_email: user_email
+    user_password: user_password
+
+    FloatLayout:
+        MDTopAppBar:
+            id: user_bar
+            md_bg_color: 0.5, 0, 0.5, 1
+            pos_hint: {'top': 1}
+            title: 'Uchemistry - Login'
+            left_action_items:
+                [["arrow-left", lambda x: app.change_screen('menu')]]
+        Image:
+            source: 'Images/app_icon.png'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+            size_hint: (0.4, 0.4)
+        MDTextField:
+            id: user_email
+            hint_text: 'Enter your email:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            icon_right: 'email'
+            icon_right_color: app.theme_cls.primary_color
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint_x: None
+            width: 250
+        MDTextField:
+            id: user_password
+            hint_text: 'Enter your password:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            password: True
+            icon_right: 'lock'
+            icon_right_color: app.theme_cls.primary_color
+            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+            size_hint_x: None
+            width: 250
+        MDRaisedButton:
+            text: 'Login'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            size_hint_x: .8
+            on_release: root.login()
+        MDTextButton:
+            text: "Don't have an account? Sing up"
+            theme_text_color: "Custom"
+            text_color: "blue"
+            font_size: 14
+            pos_hint: {'center_x': 0.5, 'center_y': 0.22}
+            on_press: app.change_screen('sgn')
+        Label:
+            id: user_name
+            text: ''
+
+<UserScreen>:
+    userName: user_name
+    userEmail: email
+    user_id: uid
+
+    FloatLayout:
+        MDTopAppBar:
+            id: user_title
+            md_bg_color: 0.5, 0, 0.5, 1
+            pos_hint: {'top': 1}
+            title: ''
+            left_action_items:
+                [["arrow-left", lambda x: app.change_screen('menu')]]
+        MDRectangleFlatButton:
+            id: logout
+            text: 'logout'
+            on_release: root.logout()
+            pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+        MDLabel:
+            id: user_name
+            text: 'User'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+        MDLabel:
+            id: email
+            text: 'Email'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        MDLabel:
+            id: uid
+            text: 'user_id'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.02}
+
+<StockScreen>:
+    FloatLayout:
+        BoxLayout:
+            orientation: 'vertical'
+            MDTopAppBar:
+                md_bg_color: 0.5, 0, 0.5, 1
+                pos_hint: {'top': 1}
+                title: 'UChemistry - Products'
+                right_action_items:
+                    [["home", lambda x: app.change_screen('menu')]]
+            MDTextField:
+                hint_text: 'Enter product name'
+                pos_hint: {'center_x': 0.5, 'center_y': 0.9}
+                size_hint_x: None
+                width: 270
+            MDRectangleFlatIconButton:
+                icon: 'plus-circle'
+                text: 'Add Product'
+                pos_hint: {'center_x': 0.25, 'center_y': 0.8}
+                on_release: root.add_product()
+            ScrollView:
+                MDList:
+                    id: list
+                    OneLineAvatarIconListItem:
+                        text: 'Radioativo'
+                        on_press: app.root.current = 'user_screen'
+                    OneLineAvatarIconListItem:
+                        text: 'Não Radioativo'
+                        IconLeftWidget:
+                            icon: 'radioactive-off'
+                        IconRightWidget:
+                            icon: 'numeric-9' 
+                    OneLineAvatarIconListItem:
+                        text: 'Não Radioativo'
+                        IconLeftWidget:
+                            icon: 'bottle-tonic-plus'
+                        IconRightWidget:
+                            icon: 'numeric-5'
+                    OneLineAvatarIconListItem:
+                        text: 'Radioativo'
+                        IconLeftWidget:
+                            icon: 'radioactive'
+                        IconRightWidget:
+                            icon: 'numeric-3'
+                    OneLineAvatarIconListItem:
+                        text: 'Não Radioativo'
+                        IconLeftWidget:
+                            icon: 'radioactive-off'
+                        IconRightWidget:
+                            icon: 'numeric-9' 
+                    OneLineAvatarIconListItem:
+                        text: 'Não Radioativo'
+                        IconLeftWidget:
+                            icon: 'bottle-tonic-plus'
+                        IconRightWidget:
+                            icon: 'numeric-5'
+                    OneLineAvatarIconListItem:
+                        text: 'Radioativo'
+                        IconLeftWidget:
+                            icon: 'radioactive'
+                        IconRightWidget:
+                            icon: 'numeric-3'
+                    OneLineAvatarIconListItem:
+                        text: 'Não Radioativo'
+                        IconLeftWidget:
+                            icon: 'radioactive-off'
+                        IconRightWidget:
+                            icon: 'numeric-9' 
+                    OneLineAvatarIconListItem:
+                        text: 'Não Radioativo'
+                        IconLeftWidget:
+                            icon: 'bottle-tonic-plus'
+                        IconRightWidget:
+                            icon: 'numeric-5'
+
+<Product>:
+    prd_name: product_name
+    cas_num: product_cas_num
+    prd_qtde: product_quantity
+
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "200dp"
+
+    MDTextField:
+        id: product_name
+        hint_text: "Name"
+        helper_text: ''
+        helper_text_mode: 'on_error'
+        required: False
+
+    MDTextField:
+        id: product_cas_num
+        hint_text: "CAS Number"
+        helper_text: ''
+        helper_text_mode: 'on_error'
+        required: False
+
+    MDTextField:
+        id: product_quantity
+        hint_text: "Quantity"
+        helper_text: ''
+        helper_text_mode: 'on_error'
+        required: False
+
