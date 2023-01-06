@@ -1,12 +1,13 @@
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.screen import MDScreen
+from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.dialog import MDDialog
 from kivy.core.window import Window
 from kivy.properties import ObjectProperty
 from Firebase import database as db
+from QRCode import qrcode_generator as qrg
 import json
 
 Window.size = (300, 600)
@@ -161,13 +162,51 @@ class UserScreen(MDScreen):
             json.dump([], data)
             self.parent.current = 'menu_screen'
 
-class Product(MDBoxLayout):
+class ProductScreen(MDScreen):
+    dialog = None
     prd_name = ObjectProperty(None)
     cas_num = ObjectProperty(None)
     prd_qtde = ObjectProperty(None)
+    prd_data = ObjectProperty(None)
+
+
+    def close_popup(self, obj):
+        self.dialog.dismiss()
+
+    def generate_qr_code(self, obj):
+        qrg.gerar_qrcode(self.prd_name.text, self.cas_num.text, self.prd_qtde.text)
+        self.prd_name.text = ''
+        self.cas_num.text = ''
+        self.prd_qtde.text = ''
+        self.prd_data.text = ''
+        self.dialog.dismiss()
+
+class Product(MDBoxLayout):
+    def __init__(self, text = '', **kwargs):
+        super().__init__(**kwargs)
+        self.ids.prd_label.text = text
 
     def save_product(self):
         user_id = db.get_id()
+
+        def show_popup():
+            if not self.dialog:
+                self.dialog = MDDialog(
+                    text="Generate QR Code?",
+                    buttons=[
+                        MDFlatButton(
+                            text="CANCEL",
+                            theme_text_color="Custom",
+                            on_release = self.close_popup
+                        ),
+                        MDFlatButton(
+                            text="GENERATE",
+                            theme_text_color="Custom",
+                            on_release = self.generate_qr_code,
+                        ),
+                    ],
+                )
+            self.dialog.open()
 
         def show_errors(local, error):
             if local == 'prd_name':
@@ -179,75 +218,27 @@ class Product(MDBoxLayout):
             elif local == 'prd_qtde':
                 self.prd_qtde.helper_text = error
                 self.prd_qtde.error = True
-
-        e = db.save_product(self.prd_name.text, self.cas_num.text, user_id, self.prd_qtde.text)
+            elif local == 'prd_data':
+                self.prd_data.helper_text = error
+                self.prd_data.error = True
+    
+        e = db.save_product(self.prd_name.text, self.cas_num.text, user_id, self.prd_qtde.text, self.prd_data.text)
 
         if e == 'prd_name_emp':
             show_errors('prd_name', 'Product Name')
         elif e == 'cas_num_emp':
-            show_errors('cas_num', 'Product Contents')
-        elif e == 'prd_amt_emp':
-            show_errors('prd_qtde', 'Product Amount')
+            show_errors('cas_num', 'Product CAS Number')
+        elif e == 'prd_qtde_emp':
+            show_errors('prd_qtde', 'Product Quantity')
+        elif e == 'prd_data_emp':
+            show_errors('prd_data', 'Product Data')
         else:
-            pass
-        
-    def teste(self, obj):
-        print(self.prd_name.text)
+            show_popup()
+            
 class StockScreen(MDScreen):
-    dialog = None
-    p = Product()
-
+    # x = db.stocked_products()
     def add_product(self):
-        if not self.dialog:
-            self.dialog = MDDialog(
-                title="Add Product:",
-                type="custom",
-                content_cls=Product(),
-                buttons=[
-                    MDFlatButton(
-                        text="CANCEL",
-                        theme_text_color="Custom",
-                        on_release = self.close_popup
-                    ),
-                    MDFlatButton(
-                        text="SAVE",
-                        theme_text_color="Custom",
-                        on_release = self.save
-                    ),
-                ],
-            )
-        self.dialog.open()
-
-    def close_popup(self, obj):
-        self.dialog.dismiss()
-
-    def save(self, obj):
-        user_id = db.get_id()
-        prd_name = self.p.prd_name
-        cas_num = self.p.cas_num
-        prd_qtde = self.p.prd_qtde
-
-        def show_errors(local, error):
-            if local == 'prd_name':
-                prd_name.helper_text = error
-                prd_name.error = True
-            elif local == 'cas_num':
-                cas_num.helper_text = error
-                cas_num.error = True
-            elif local == 'prd_qtde':
-                prd_qtde.helper_text = error
-                prd_qtde.error = True
-
-        e = db.save_product(prd_name.text, cas_num.text, user_id, prd_qtde.text)
-
-        if e == 'prd_name_emp':
-            show_errors('prd_name', 'Product Name')
-        elif e == 'cas_num_emp':
-            show_errors('cas_num', 'Product Contents')
-        elif e == 'prd_amt_emp':
-            show_errors('prd_qtde', 'Product Amount')
-        else:
-            pass
+        self.ids.prd_box.add_widget(Product('Example'))
 class UChemistry(MDApp):
     user_name = 'User'
 
@@ -278,7 +269,6 @@ class UChemistry(MDApp):
                 else:
                     self.root.current = scr
             else:
-                print(scr)
                 self.root.current = scr
 
         if btn == 'stck':
@@ -299,5 +289,4 @@ class UChemistry(MDApp):
             go_screen('signin_screen')
 
 if __name__=='__main__':
-    print('inicializando...')
     UChemistry().run()

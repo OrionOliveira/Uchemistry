@@ -18,6 +18,9 @@
     UserScreen:
         id: usr
         name: 'user_screen'
+    ProductScreen:
+        id: prd
+        name: 'product_screen'
     StockScreen:
         id: stck
         name: 'stock_screen'
@@ -55,7 +58,7 @@
                 pos: self.pos
                 size: self.size
         MDBoxLayout:
-            spacing: 5
+            spacing: 3
             orientation: 'vertical'
             MDTopAppBar:
                 md_bg_color: 0.5, 0, 0.5, 1
@@ -66,7 +69,7 @@
             ZBarCam:
                 id: zbarcam
                 on_symbols: if self.symbols: root.read_qr(self.symbols[0].data)
-                pos_hint: {'center_x': .5, 'center_y': .5}
+                pos_hint: {'center_x': .5, 'center_y': .6}
                 adaptive_size: True
                 adaptive_height: True
                 adaptive_width: True
@@ -84,14 +87,20 @@
                     id: qr_name
                     text: ''
                     pos_hint: {'center_x': .5, 'center_y': .7}
+                    adaptive_height: True
+                    halign: 'center'
                 MDLabel:
                     id: qr_contents
                     text: ''
                     pos_hint: {'center_x': .5, 'center_y': .5}
+                    adaptive_height: True
+                    halign: 'center'
                 MDLabel:
                     id: qr_amount
                     text: ''
                     pos_hint: {'center_x': .5, 'center_y': .3}
+                    adaptive_height: True
+                    halign: 'center'
 
 <SignInScreen>:
     user_name: user_name
@@ -249,6 +258,73 @@
             text: 'user_id'
             pos_hint: {'center_x': 0.5, 'center_y': 0.02}
 
+<ProductScreen>:
+    prd_name: product_name
+    cas_num: product_cas_num
+    prd_qtde: product_quantity
+    prd_data: product_data
+    
+    MDFloatLayout:
+        MDTopAppBar:
+            md_bg_color: 0.5, 0, 0.5, 1
+            pos_hint: {'top': 1}
+            title: 'Add Products'
+            right_action_items:
+                [["home", lambda x: app.change_screen('menu')],
+                ["list-box-outline", lambda x: app.change_screen('stck')]]
+        MDLabel:
+            text: '+ Produto'
+            font_size: 50
+            pos_hint: {'center_x': 0.7, 'center_y': 0.75}
+        MDTextField:
+            id: product_name
+            hint_text: 'Nome:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+            size_hint_x: None
+            width: 250
+        MDTextField:
+            id: product_cas_num
+            hint_text: 'Número CAS:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint_x: None
+            width: 250
+        MDTextField:
+            id: product_quantity
+            hint_text: 'Quantidade:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+            size_hint_x: None
+            width: 250
+        MDTextField:
+            id: product_data
+            hint_text: 'Data:'
+            helper_text: ''
+            helper_text_mode: 'on_error'
+            required: False
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            size_hint_x: None
+            width: 250 
+        MDRectangleFlatButton:
+            text: 'Salvar'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+            on_release: root.save_product()
+
+<Product>:
+    id: prd
+    orientation: 'horizontal'
+    
+    adaptive_width: True
+    MDLabel:
+        id: prd_label
+
 <StockScreen>:
     FloatLayout:
         BoxLayout:
@@ -268,90 +344,10 @@
                 icon: 'plus-circle'
                 text: 'Add Product'
                 pos_hint: {'center_x': 0.25, 'center_y': 0.8}
-                on_release: root.add_product()
+                on_release: root.add_product() #app.root.current = 'product_screen'
             ScrollView:
-                MDList:
-                    id: list
-                    OneLineAvatarIconListItem:
-                        text: 'Radioativo'
-                        on_press: app.root.current = 'user_screen'
-                    OneLineAvatarIconListItem:
-                        text: 'Não Radioativo'
-                        IconLeftWidget:
-                            icon: 'radioactive-off'
-                        IconRightWidget:
-                            icon: 'numeric-9' 
-                    OneLineAvatarIconListItem:
-                        text: 'Não Radioativo'
-                        IconLeftWidget:
-                            icon: 'bottle-tonic-plus'
-                        IconRightWidget:
-                            icon: 'numeric-5'
-                    OneLineAvatarIconListItem:
-                        text: 'Radioativo'
-                        IconLeftWidget:
-                            icon: 'radioactive'
-                        IconRightWidget:
-                            icon: 'numeric-3'
-                    OneLineAvatarIconListItem:
-                        text: 'Não Radioativo'
-                        IconLeftWidget:
-                            icon: 'radioactive-off'
-                        IconRightWidget:
-                            icon: 'numeric-9' 
-                    OneLineAvatarIconListItem:
-                        text: 'Não Radioativo'
-                        IconLeftWidget:
-                            icon: 'bottle-tonic-plus'
-                        IconRightWidget:
-                            icon: 'numeric-5'
-                    OneLineAvatarIconListItem:
-                        text: 'Radioativo'
-                        IconLeftWidget:
-                            icon: 'radioactive'
-                        IconRightWidget:
-                            icon: 'numeric-3'
-                    OneLineAvatarIconListItem:
-                        text: 'Não Radioativo'
-                        IconLeftWidget:
-                            icon: 'radioactive-off'
-                        IconRightWidget:
-                            icon: 'numeric-9' 
-                    OneLineAvatarIconListItem:
-                        text: 'Não Radioativo'
-                        IconLeftWidget:
-                            icon: 'bottle-tonic-plus'
-                        IconRightWidget:
-                            icon: 'numeric-5'
-
-<Product>:
-    prd_name: product_name
-    cas_num: product_cas_num
-    prd_qtde: product_quantity
-
-    orientation: "vertical"
-    spacing: "12dp"
-    size_hint_y: None
-    height: "200dp"
-
-    MDTextField:
-        id: product_name
-        hint_text: "Name"
-        helper_text: ''
-        helper_text_mode: 'on_error'
-        required: False
-
-    MDTextField:
-        id: product_cas_num
-        hint_text: "CAS Number"
-        helper_text: ''
-        helper_text_mode: 'on_error'
-        required: False
-
-    MDTextField:
-        id: product_quantity
-        hint_text: "Quantity"
-        helper_text: ''
-        helper_text_mode: 'on_error'
-        required: False
-
+                MDBoxLayout:
+                    id: prd_box
+                    spacing: '10dp'
+                    orientation: 'vertical'
+                    adaptive_height: True

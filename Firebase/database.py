@@ -91,14 +91,15 @@ def login_db(email, senha):
         print(f'database.py[login_db]: {error}')
 
 # Function to Save products
-def save_product(product_name, product_cas_num, user_id, product_amount):
-  qre = err_hd.qr_errors(product_name, product_cas_num, product_amount)
-  print(f'database.py[save_product]: {qre}')
+def save_product(product_name, product_cas_num, user_id, product_quantity, product_data):
+  qre = err_hd.qr_errors(product_name, product_cas_num, product_quantity, product_data)
+
   if qre[0] == False:
     data = {
-      'description': f'{product_cas_num}',
-      'amount': f'{product_amount}',
-      'name': f'{product_name}'
+      'name': f'{product_name}',
+      'cas_num': f'{product_cas_num}',
+      'quantity': f'{product_quantity}',
+      'data': f'{product_data}'
     }
     db.child('Users').child(f"{'UIDs'}").child(user_id).child('Products').push(data)
     db.child('Stock').child('PIDs').push(data)
