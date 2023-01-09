@@ -41,14 +41,14 @@ def signin_errors(_name, _email, _password, _rpt_pssw):
         print(f'Email não pertence a provedores válidos')
         return True, 'inv_prv'
 
-def qr_errors(prd_name, prd_cas_num, prd_quantity, prd_data):
+def qr_errors(prd_name, prd_cas_num, prd_quantity, prd_date):
   if prd_name == '':
     return True, 'prd_name_emp'
   elif prd_cas_num == '':
     return True, 'cas_num_emp'
   elif prd_quantity == '':
     return True, 'prd_qtde_emp'
-  elif prd_data == '':
-    return True, 'prd_data_emp'
+  elif prd_date == '':
+    return True, 'prd_date_emp'
   else:
     return False, 'Valid Product'

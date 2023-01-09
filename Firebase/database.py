@@ -91,18 +91,19 @@ def login_db(email, senha):
         print(f'database.py[login_db]: {error}')
 
 # Function to Save products
-def save_product(product_name, product_cas_num, user_id, product_quantity, product_data):
-  qre = err_hd.qr_errors(product_name, product_cas_num, product_quantity, product_data)
+def save_product(product_name, product_cas_num, user_id, product_quantity, product_date):
+  qre = err_hd.qr_errors(product_name, product_cas_num, product_quantity, product_date)
 
   if qre[0] == False:
     data = {
       'name': f'{product_name}',
       'cas_num': f'{product_cas_num}',
       'quantity': f'{product_quantity}',
-      'data': f'{product_data}'
+      'date': f'{product_date}'
     }
-    db.child('Users').child(f"{'UIDs'}").child(user_id).child('Products').push(data)
-    db.child('Stock').child('PIDs').push(data)
+    x = db.child('Users').child(f"{'UIDs'}").child(user_id).child('Products').push(data)
+    print(x)
+    db.child('Stock').child('PIDs').child(x['name']).set(data)
     return 'Valid Product'
   else:
     return qre[1]
@@ -117,11 +118,12 @@ def stocked_products():
 
 # Function to return account information
 def account_info():
+  try:
     id = get_id()
-    user_info = db.child(f'Users/UIDs/{id}').get()
-    for info in user_info.each():
-      print(f'database.py[account_info](info.val()): {info.val()}')
-    return info.val()
+    user_info = db.child(f'Users/UIDs/{id}/Info').get()
+    return user_info.val()['email'], user_info.val()['name'], id
+  except:
+    return 'email', 'User', 0000
 
 def get_id():
   try:

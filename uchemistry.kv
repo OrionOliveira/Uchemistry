@@ -86,19 +86,25 @@
                 MDLabel:
                     id: qr_name
                     text: ''
-                    pos_hint: {'center_x': .5, 'center_y': .7}
+                    pos_hint: {'center_x': .5, 'center_y': .8}
                     adaptive_height: True
                     halign: 'center'
                 MDLabel:
-                    id: qr_contents
+                    id: qr_cas_num
                     text: ''
-                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    pos_hint: {'center_x': .5, 'center_y': .6}
                     adaptive_height: True
                     halign: 'center'
                 MDLabel:
-                    id: qr_amount
+                    id: qr_quantity
                     text: ''
-                    pos_hint: {'center_x': .5, 'center_y': .3}
+                    pos_hint: {'center_x': .5, 'center_y': .4}
+                    adaptive_height: True
+                    halign: 'center'
+                MDLabel:
+                    id: qr_date
+                    text: ''
+                    pos_hint: {'center_x': .5, 'center_y': .2}
                     adaptive_height: True
                     halign: 'center'
 
@@ -262,7 +268,8 @@
     prd_name: product_name
     cas_num: product_cas_num
     prd_qtde: product_quantity
-    prd_data: product_data
+    prd_date: product_date
+    sv_lbl: saved_label
     
     MDFloatLayout:
         MDTopAppBar:
@@ -273,12 +280,12 @@
                 [["home", lambda x: app.change_screen('menu')],
                 ["list-box-outline", lambda x: app.change_screen('stck')]]
         MDLabel:
-            text: '+ Produto'
+            text: 'Product'
             font_size: 50
             pos_hint: {'center_x': 0.7, 'center_y': 0.75}
         MDTextField:
             id: product_name
-            hint_text: 'Nome:'
+            hint_text: 'Name:'
             helper_text: ''
             helper_text_mode: 'on_error'
             required: False
@@ -287,7 +294,7 @@
             width: 250
         MDTextField:
             id: product_cas_num
-            hint_text: 'Número CAS:'
+            hint_text: 'CAS Number:'
             helper_text: ''
             helper_text_mode: 'on_error'
             required: False
@@ -296,7 +303,7 @@
             width: 250
         MDTextField:
             id: product_quantity
-            hint_text: 'Quantidade:'
+            hint_text: 'Quantity:'
             helper_text: ''
             helper_text_mode: 'on_error'
             required: False
@@ -304,8 +311,8 @@
             size_hint_x: None
             width: 250
         MDTextField:
-            id: product_data
-            hint_text: 'Data:'
+            id: product_date
+            hint_text: 'Date:'
             helper_text: ''
             helper_text_mode: 'on_error'
             required: False
@@ -313,19 +320,24 @@
             size_hint_x: None
             width: 250 
         MDRectangleFlatButton:
-            text: 'Salvar'
+            text: 'Save'
             pos_hint: {'center_x': 0.5, 'center_y': 0.2}
             on_release: root.save_product()
+        MDLabel:
+            id: saved_label
+            text: ''
+            pos_hint: {'center_x': 0.7, 'center_y': 0.1}
+            text_color: 'green'
 
 <Product>:
     id: prd
     orientation: 'horizontal'
-    
     adaptive_width: True
     MDLabel:
         id: prd_label
 
 <StockScreen>:
+    prd_box: prd_box
     FloatLayout:
         BoxLayout:
             orientation: 'vertical'
@@ -344,7 +356,7 @@
                 icon: 'plus-circle'
                 text: 'Add Product'
                 pos_hint: {'center_x': 0.25, 'center_y': 0.8}
-                on_release: root.add_product() #app.root.current = 'product_screen'
+                on_release: app.root.current = 'product_screen'
             ScrollView:
                 MDBoxLayout:
                     id: prd_box
