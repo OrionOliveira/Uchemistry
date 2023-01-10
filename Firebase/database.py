@@ -92,14 +92,14 @@ def login_db(email, senha):
 
 # Function to Save products
 def save_product(product_name, product_cas_num, user_id, product_quantity, product_date):
-  qre = err_hd.qr_errors(product_name, product_cas_num, product_quantity, product_date)
+  qre = err_hd.prd_errors(product_name, product_cas_num, product_quantity, product_date)
 
   if qre[0] == False:
     data = {
       'name': f'{product_name}',
       'cas_num': f'{product_cas_num}',
       'quantity': f'{product_quantity}',
-      'date': f'{product_date}'
+      'entry date': f'{product_date}'
     }
     x = db.child('Users').child(f"{'UIDs'}").child(user_id).child('Products').push(data)
     print(x)
@@ -110,11 +110,15 @@ def save_product(product_name, product_cas_num, user_id, product_quantity, produ
 
 # Function to return stocked products
 def stocked_products():
-  all_products = db.child('Stock/PIDs').get()
-  return_list = []
-  for id in all_products.each():
-    return_list.append(id.key())
-  return return_list
+  try:
+    all_products = db.child('Stock/PIDs').get()
+    prd_list = []
+    for id in all_products.each():
+      prd_name = db.child(f'Stock/PIDs/{id.key()}').get()
+      prd_list.append(prd_name.val()['name'])
+    return prd_list
+  except:
+    return []
 
 # Function to return account information
 def account_info():

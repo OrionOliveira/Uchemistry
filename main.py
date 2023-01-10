@@ -4,6 +4,8 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.pickers import MDDatePicker
+from kivymd.uix.menu import MDDropdownMenu
 from kivy.core.window import Window
 from kivy.properties import ObjectProperty
 from Firebase import database as db
@@ -11,8 +13,6 @@ from QRCode import qrcode_generator as qrg
 import json
 
 Window.size = (300, 600)
-
-# https://materialdesignicons.com/ - Lista com todos os ícones disponíveis
 
 class Manager(MDScreenManager):
     pass
@@ -29,7 +29,7 @@ class ScannerScreen(MDScreen):
         self.ids.qr_name.text = f"Name: {converted_in_dict['name']}"
         self.ids.qr_cas_num.text = f"CAS Number: {converted_in_dict['cas_num']}"
         self.ids.qr_quantity.text = f"Quantity: {converted_in_dict['quantity']}"
-        self.ids.qr_date.text = f"Data: {converted_in_dict['date']}"
+        self.ids.qr_date.text = f"Entry date: {converted_in_dict['entry date']}"
 
     def clear(self):
         self.ids.qr_name.text = ''
@@ -212,7 +212,6 @@ class ProductScreen(MDScreen):
     
         e = db.save_product(self.prd_name.text, self.cas_num.text, user_id, self.prd_qtde.text, self.prd_date.text)
 
-
         if e == 'prd_name_emp':
             show_errors('prd_name', 'Product Name')
         elif e == 'cas_num_emp':
@@ -223,11 +222,7 @@ class ProductScreen(MDScreen):
             show_errors('prd_date', 'Product Date')
         else:
             self.sv_lbl.text = 'Product saved successfully!'
-            self.add_product(self.prd_name.text)
             show_popup()
-
-    def add_product(self, name):
-        self.parent.ids.stck.prd_box.add_widget(Product(name))
 
     def close_popup(self, obj):
         self.dialog.dismiss()
@@ -236,17 +231,44 @@ class ProductScreen(MDScreen):
         qrg.gerar_qrcode(self.prd_name.text, self.cas_num.text, self.prd_qtde.text, self.prd_date.text)
         self.dialog.dismiss()
 
+    def show_calendar(self):
+        date_dialog = MDDatePicker(min_year = 2023, primary_color = 'purple')
+        date_dialog.bind(on_save = self.on_save, on_cancel = self.on_cancel)
+        date_dialog.open()
+
+    def on_save(self, instance, value, date_range):
+        self.prd_date.text = str(value)
+        
+    def on_cancel(self, *args):
+        date_dialog = MDDatePicker()
+        date_dialog.dismiss()
+
+    
+    
 class Product(MDBoxLayout):
     def __init__(self, text = '', **kwargs):
         super().__init__(**kwargs)
         self.ids.prd_label.text = text
             
 class StockScreen(MDScreen):
+    products = []
     prd_box = ObjectProperty(None)
+
+    def add_product(self, name):
+        if self.products == '':
+            pass
+        else:
+            self.ids.prd_box.add_widget(Product(text = name))
+
     def on_pre_enter(self):
-        pass
-        #x = db.stocked_products()
-        #print(f'stocked products: {x}')
+        self.loadData()
+        for prd in self.products:
+            self.add_product(prd)
+            
+    def loadData(self):
+        x = db.stocked_products()
+        self.products = x
+        print(x)
 class UChemistry(MDApp):
     user_name = 'User'
 
@@ -254,13 +276,6 @@ class UChemistry(MDApp):
     def build(self):
         self.theme_cls.primary_palette = 'Purple'
         return Manager()
-
-    def on_start(self):
-        pass
-        # return all save products
-        #x = db.stocked_products()
-        #print(f'stocked products: {x}')
-        # create a widget for each product
 
 # Function to change screen
     def change_screen(self, btn):

@@ -318,7 +318,15 @@
             required: False
             pos_hint: {'center_x': 0.5, 'center_y': 0.3}
             size_hint_x: None
-            width: 250 
+            width: 250
+        MDIconButton:
+            icon: 'arrow-down-drop-circle'
+            pos_hint: {'center_x': 0.9, 'center_y': 0.4}
+            on_release: root.menu.open()
+        MDIconButton:
+            icon: 'arrow-down-drop-circle'
+            pos_hint: {'center_x': 0.9, 'center_y': 0.3}
+            on_release: root.show_calendar()
         MDRectangleFlatButton:
             text: 'Save'
             pos_hint: {'center_x': 0.5, 'center_y': 0.2}
@@ -331,16 +339,18 @@
 
 <Product>:
     id: prd
-    orientation: 'horizontal'
-    adaptive_width: True
+    size_hint_y: None
+    height: '100sp'
     MDLabel:
         id: prd_label
+        
 
 <StockScreen>:
     prd_box: prd_box
-    FloatLayout:
-        BoxLayout:
+    MDFloatLayout:
+        MDBoxLayout:
             orientation: 'vertical'
+
             MDTopAppBar:
                 md_bg_color: 0.5, 0, 0.5, 1
                 pos_hint: {'top': 1}
@@ -357,7 +367,7 @@
                 text: 'Add Product'
                 pos_hint: {'center_x': 0.25, 'center_y': 0.8}
                 on_release: app.root.current = 'product_screen'
-            ScrollView:
+            MDScrollView:
                 MDBoxLayout:
                     id: prd_box
                     spacing: '10dp'
